@@ -5,7 +5,7 @@ from dash.development.base_component import Component, _explicitize_args
 
 class DashFlows(Component):
     """A DashFlows component.
-
+ddd
 
 Keyword arguments:
 
@@ -80,7 +80,8 @@ Keyword arguments:
 - style (dict; optional):
     Custom CSS styles for the container div.
 
-- wholeGraph (string; default "")"""
+- wholeGraph (string; default ""):
+    wakawaka."""
     _children_props = []
     _base_nodes = ['children']
     _namespace = 'dash_flows'

@@ -3,6 +3,9 @@ import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { Handle, Position, NodeResizer } from 'reactflow';
 
+/**
+ * ddd
+ */
 const ResizableNode = memo(({ data, selected }) => {
     const renderDashComponent = (component) => {
         if (!component) return null;
@@ -106,8 +109,8 @@ const ResizableNode = memo(({ data, selected }) => {
                 isVisible={selected}
                 minWidth={100}
                 minHeight={50}
-                handleStyle={{ width: 8, height: 8 }}
-                lineStyle={{ borderWidth: 1 }}
+                // handleStyle={{ width: 8, height: 8 }}
+                //lineStyle={{ borderWidth: 1 }}
             />
             <Handle
                 type="target"
@@ -137,9 +140,16 @@ const ResizableNode = memo(({ data, selected }) => {
 ResizableNode.displayName = 'ResizableNode';
 
 ResizableNode.propTypes = {
+    /**
+    * ddd
+    */
     data: PropTypes.shape({
         label: PropTypes.any
     }).isRequired,
+
+    /**
+    * ddd
+     */
     selected: PropTypes.bool
 };
 

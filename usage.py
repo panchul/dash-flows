@@ -48,7 +48,7 @@ whole_graph = {
     {
         'id': 'animated1',
         'type': 'circle',
-        'data': {'label': '🔄'},
+        'data': {'label': 'round thingie'},
         'position': {'x': 250, 'y': 150},
         'style': {
             'width': 60,
@@ -61,7 +61,7 @@ whole_graph = {
         'data': {
             'label': "another one"
         },
-        'position': {'x': 250, 'y': 250},
+        'position': {'x': 210, 'y': 210},
         'style': {
             'width': 300,
             'height': 300,
@@ -71,8 +71,25 @@ whole_graph = {
     {
         'id': '4',
         'type': 'banana',
-        'data': {'label': 'banana' },
+        'data': {
+            'label': 'banana4',
+            'depends_on': []
+             },
         'position': {'x': 250, 'y': 250},
+        'style': {
+            'width': 300,
+            'height': 300,
+            'minHeight': 200
+        }
+    },
+    {
+        'id': '5',
+        'type': 'banana',
+        'data': {
+            'label': 'banana5',
+            'depends_on': ['4']
+             },
+        'position': {'x': 270, 'y': 270},
         'style': {
             'width': 300,
             'height': 300,

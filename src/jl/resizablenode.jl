@@ -6,12 +6,12 @@ export resizablenode
     resizablenode(;kwargs...)
 
 A ResizableNode component.
-
+ddd
 Keyword arguments:
-- `data` (required): . data has the following type: lists containing elements 'label'.
+- `data` (required): ddd. data has the following type: lists containing elements 'label'.
 Those elements have the following types:
   - `label` (Bool | Real | String | Dict | Array; optional)
-- `selected` (Bool; optional)
+- `selected` (Bool; optional): ddd
 """
 function resizablenode(; kwargs...)
         available_props = Symbol[:data, :selected]

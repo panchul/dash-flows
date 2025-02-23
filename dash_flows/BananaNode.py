@@ -5,23 +5,35 @@ from dash.development.base_component import Component, _explicitize_args
 
 class BananaNode(Component):
     """A BananaNode component.
-
+ddd
 
 Keyword arguments:
 
-- data (dict; required)
+- data (dict; default {    label: "undef",    depends_on: [],    node_id: "undef"}):
+    ddd.
 
     `data` is a dict with keys:
 
     - label (boolean | number | string | dict | list; optional)
 
-- selected (boolean; default False)"""
+    - depends_on (list; optional)
+
+    - node_id (string; optional)
+
+    - onChange (optional)
+
+    - onDelete (optional)
+
+    - dependsOnOptions (boolean | number | string | dict | list; optional)
+
+- selected (boolean; default False):
+    ddd."""
     _children_props = []
     _base_nodes = ['children']
     _namespace = 'dash_flows'
     _type = 'BananaNode'
     @_explicitize_args
-    def __init__(self, data=Component.REQUIRED, selected=Component.UNDEFINED, **kwargs):
+    def __init__(self, data=Component.UNDEFINED, selected=Component.UNDEFINED, **kwargs):
         self._prop_names = ['data', 'selected']
         self._valid_wildcard_attributes =            []
         self.available_properties = ['data', 'selected']
@@ -30,10 +42,5 @@ Keyword arguments:
         _locals = locals()
         _locals.update(kwargs)  # For wildcard attrs and excess named props
         args = {k: _locals[k] for k in _explicit_args}
-
-        for k in ['data']:
-            if k not in args:
-                raise TypeError(
-                    'Required argument `' + k + '` was not specified.')
 
         super(BananaNode, self).__init__(**args)

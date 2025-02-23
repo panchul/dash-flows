@@ -5,17 +5,19 @@ from dash.development.base_component import Component, _explicitize_args
 
 class ResizableNode(Component):
     """A ResizableNode component.
-
+ddd
 
 Keyword arguments:
 
-- data (dict; required)
+- data (dict; required):
+    ddd.
 
     `data` is a dict with keys:
 
     - label (boolean | number | string | dict | list; optional)
 
-- selected (boolean; default False)"""
+- selected (boolean; default False):
+    ddd."""
     _children_props = []
     _base_nodes = ['children']
     _namespace = 'dash_flows'

@@ -15,6 +15,8 @@ import {
 
 //import '@xyflow/react/dist/style.css';
 import 'reactflow/dist/style.css';
+import {FaPencilAlt} from 'react-icons/fa';
+import CreatableSelect from 'react-select/creatable';
 import ELK from 'elkjs/lib/elk.bundled.js';
 
 import ResizableNode from './ResizableNode';
@@ -43,10 +45,15 @@ const processDashComponents = (nodes) => {
     if (!nodes) return [];
 
     const processComponent = (component) => {
-        if (!component || typeof component === 'string') return component;
+        if (!component || typeof component === 'string') {
+            console.log('DEBUG: regular string: ', component);
+            return component;
+        }
 
         // If it's a Dash component with _dashprivate_layout
         if (component.props && component.props._dashprivate_layout) {
+            console.log('DEBUG: component with props and dashprivate_layout: ', component);
+
             const layout = component.props._dashprivate_layout;
             const processedChildren = Array.isArray(layout.props.children)
                 ? layout.props.children.map(processComponent)
@@ -67,6 +74,7 @@ const processDashComponents = (nodes) => {
 
         // If it's a regular React component
         if (component.type && component.props) {
+            console.log('regular react node', component);
             const processedChildren = Array.isArray(component.props.children)
                 ? component.props.children.map(processComponent)
                 : component.props.children ? processComponent(component.props.children) : null;
@@ -98,13 +106,73 @@ const processDashComponents = (nodes) => {
     });
 };
 
+/**
+ * ddd
+ */
 const FlowWithProvider = (props) => {
-    const [nodes, setNodes, onNodesChange] = useNodesState(props.nodes);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(props.edges);
+
+    const getGraphJson = () => {
+
+        try {
+            const res = JSON.parse(props.wholeGraph);
+
+            if(res.nodes == undefined) {
+                console.log("unexpected res.nodes == undefined");
+            }
+
+            if(res.edges == undefined) {
+                console.log("unexpected res.edges == undefined");
+            }
+            return res;
+        } catch (error) {
+            console.log('failed to parse graph json:', error);
+            return [];
+        }
+    }
+
+    const parseGraphAndGetNodes = () => {
+        try {
+            return getGraphJson().nodes.map((node)=>
+            ({
+                id: node.id,
+                type: node.type,
+                position: node.position,
+                data: {
+                    label: node.data.label,
+                    depends_on: node.data.depends_on || [],
+                    node_id: node.id // otherwise it is not clear how the node class knows what it is
+                },
+            })
+            );
+        } catch (error) {
+            console.log('failed to parse graph and get the nodes:', error);
+            return [];
+        }
+    };
+
+    const parseGraphAndGetEdges = () => {
+        try {
+            return getGraphJson().edges.map((edge)=>
+            ({
+                id: edge.id,
+                source: edge.source,
+                target: edge.target,
+            })
+            );
+        } catch (error) {
+            console.log('failed to parse graph and get the edges:', error);
+            return [];
+        }
+    };
+
+    const [nodes, setNodes, onNodesChange] = useNodesState(parseGraphAndGetNodes());
+    const [edges, setEdges, onEdgesChange] = useEdgesState(parseGraphAndGetEdges());
     const { setViewport } = useViewport();
 
     const applyLayout = async (options) => {
         if (!options) return;
+
+        console.log('Applying laout:', nodes, edges);
 
         try {
             const layoutOptions = JSON.parse(options);
@@ -156,7 +224,9 @@ const FlowWithProvider = (props) => {
             });
 
             setNodes(layoutedNodes);
-            props.setProps({ nodes: layoutedNodes });
+            props.setProps({
+                    nodes: layoutedNodes 
+                });
         } catch (error) {
             console.error('Layout error:', error);
         }
@@ -164,27 +234,221 @@ const FlowWithProvider = (props) => {
 
     useEffect(() => {
         if (props.layoutOptions) {
+            console.log('props.layoutOptions changed:', props.layoutOptions);
             applyLayout(props.layoutOptions);
         }
     }, [props.layoutOptions]);
 
     useEffect(() => {
         if (props.nodes !== nodes) {
-            props.setProps({ nodes });
+            //console.log('new nodes:', nodes);
+            props.setProps({
+                nodes,
+                wholeGraph: JSON.stringify({nodes,edges})
+            });
         }
     }, [nodes]);
 
     useEffect(() => {
         if (props.edges !== edges) {
-            props.setProps({ edges });
+            //console.log('new edges:', edges);
+            props.setProps({
+                edges,
+                wholeGraph: JSON.stringify({nodes,edges})
+                });
         }
     }, [edges]);
 
-    const onConnect = useCallback((params) => {
-        const newEdge = { ...params, id: `e${params.source}-${params.target}` };
-        setEdges((eds) => [...eds, newEdge]);
-        props.setProps({ edges: [...edges, newEdge] });
+
+    const onChange = (newValue, actionMeta, node_id) => {
+
+        let field;
+        let value;
+        if (actionMeta == undefined) {
+            field = newValue.target.name;
+            value = newValue.target.value;
+        } else {
+            field = actionMeta.name;
+            value = Array.isArray(newValue) ? newValue.map(item => item.value) : newValue;
+        }
+
+        setNodes((nds) => {
+            nds.map((node)=>{
+                if(node.id == node_id) {
+                    return {
+                        ...node,
+                        data: {
+                            ...node.data,
+                            [field]:value
+                        }
+                    };
+                } else {
+                    return node;
+                }
+            })
+        });
+    };
+
+    const onDelete = (node_id) => {
+        setNodes((nds)=>nds.filter((node)=> node.id != node_id));
+        setEdges((eds)=>eds.filter((edge)=> edge.source != node_id && edge.target != node_id));
+        setNodes((nds) => 
+            nds.map((node) => {
+                return {
+                    ...node,
+                    depends_on: (node.depends_on || []).filter((dep)=> dep!= node_id)
+                };
+            }
+        ));
+    };
+
+    const updatedDependsOnOptions = (nds) => nds.map((node) => {
+        return {
+            value: node.id,
+            label: node.data.label
+        };
+    });
+
+    useEffect(()=>{
+        setNodes((nds) =>
+            nds.map((node)=> {
+            return {
+                ...node,
+                data: {
+                    ...node.data,
+                    onChange: onChange,
+                    onDelete: onDelete,
+                    dependsOnOptions: updatedDependsOnOptions(nds)
+                }
+            };
+        }));
+    }, [setNodes]); // nodes too?
+
+    const onConnect = useCallback(
+        (params) => {
+            const newEdge = {
+            ...params,
+            id: `e${params.source}-${params.target}` 
+            };
+            setEdges((eds) => [...eds, newEdge]);
+            setNodes((nds)=>
+                nds.map((node) => {
+                    if(node.id === params.target) {
+                        return {
+                            ...node,
+                            data: {
+                                ...node.data,
+                                depends_on: [
+                                    ...(node.data.depends_on || []),
+                                    params.source,
+                                ]
+                            }
+                        };
+                    }
+                    return node;
+                })
+            );
+            props.setProps({
+                nodes,
+                edges: [...edges, newEdge],
+                wholeGraph: JSON.stringify({nodes,edges}),
+            });
     }, [edges, setEdges]);
+
+
+    const generateNewNode = (params) => {
+        const newid = `n${params.counter++}`;
+        return {
+            id: newid,
+            type: 'banana',
+            position: {
+                x: 25*params.counter,
+                y: 25*params.counter
+                },
+            data: {
+                label: 'something',
+                depends_on: [],
+                node_id: newid,
+                onChange:onChange,
+                onDelete:onDelete,
+                dependsOnOptions: updatedDependsOnOptions(nodes)
+            }
+        };
+    };
+
+    const onAddNode = useCallback(
+        (params) => {
+            const newNode = generateNewNode(params);
+            setNodes((nds)=>[...nds,newNode]);
+
+            props.setProps({
+                nodes: [...nodes, newNode],
+                edges: edges,
+                wholeGraph: JSON.stringify({
+                    nodes:[...nodes, newNode],
+                    edges: edges
+                })
+            });
+        },
+        [setNodes]
+    );
+
+    const onRemoveNode = useCallback(
+        (params) => {
+            const nodeId = params.node.id;
+            setNodes((nds)=>nds.filter((node)=>node.id !== nodeId));
+            setEdges((eds)=>eds.filter((edge)=>edge.source !== nodeId && edge.target !== nodeId));
+
+            setNodes((nds)=>
+                nds.map((node)=>{
+                    if(node.id === nodeId) {
+                        return {
+                            ...node,
+                            data: {
+                                ...node.data,
+                                depends_on: depends_on.filter((dep)=> dep !== nodeId)
+                            }
+                        };
+                    }
+                    return node;
+            }));
+
+            props.setProps({
+                nodes: nodes.filter((node)=>node.id !== nodeId),
+                edges: edges.filter((edge)=>edge.source !== nodeId && edge.target !== nodeId),
+                wholeGraph: JSON.stringify({nodes,edges})
+            });
+        },
+        [setNodes, setEdges]
+    );
+
+    const onRemoveEdge = useCallback(
+        (params) => {
+            const edgeId = params.edge.id;
+            setEdges((eds)=>eds.filter((edge)=>edge.id !== edgeId));
+
+            setNodes((nds)=>
+                nds.map((node)=>{
+                    if(node.id === params.edge.target) {
+                        return {
+                            ...node,
+                            data: {
+                                ...node.data,
+                                depends_on: depends_on.filter((dep)=> dep !== params.edge.source)
+                            }
+                        };
+                    }
+                    return node;
+            }));
+
+            props.setProps({
+                nodes: nodes.filter((node)=>node.id !== nodeId),
+                edges: edges.filter((edge)=>edge.source !== nodeId && edge.target !== nodeId),
+                wholeGraph: JSON.stringify({nodes,edges})
+            });
+        },
+        [setNodes, setEdges]
+    );
 
     const processedNodes = useMemo(() => processDashComponents(nodes), [nodes]);
 
@@ -206,12 +470,19 @@ const FlowWithProvider = (props) => {
                 {props.showControls && <Controls />}
                 {props.showMiniMap && <MiniMap />}
                 {props.showBackground && <Background />}
-                {props.showDevTools && <DevTools viewport={useViewport()} nodes={processedNodes} />}
+                {props.showDevTools && <DevTools
+                    viewport={useViewport()}
+                    nodes={processedNodes}
+                    onAddNode={onAddNode}
+                     />}
             </ReactFlow>
         </div>
     );
 };
 
+/**
+ * ddd
+ */
 const DashFlows = (props) => {
     return (
         <div id={props.id}>
@@ -275,7 +546,7 @@ DashFlows.propTypes = {
     showBackground: PropTypes.bool,
 
     /**
-     * 
+     * wakawaka
      */
     wholeGraph: PropTypes.string,
 

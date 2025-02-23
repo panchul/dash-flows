@@ -6,7 +6,7 @@ export dashflows
     dashflows(;kwargs...)
 
 A DashFlows component.
-
+ddd
 Keyword arguments:
 - `id` (String; optional): The ID used to identify this component in Dash callbacks.
 - `className` (String; optional): CSS class name for the container div
@@ -37,7 +37,7 @@ Those elements have the following types:
 - `showDevTools` (Bool; optional): Show/hide the developer tools panel
 - `showMiniMap` (Bool; optional): Show/hide the minimap navigation component
 - `style` (Dict; optional): Custom CSS styles for the container div
-- `wholeGraph` (String; optional)
+- `wholeGraph` (String; optional): wakawaka
 """
 function dashflows(; kwargs...)
         available_props = Symbol[:id, :className, :edges, :elementsSelectable, :layoutOptions, :nodes, :nodesConnectable, :nodesDraggable, :showBackground, :showControls, :showDevTools, :showMiniMap, :style, :wholeGraph]

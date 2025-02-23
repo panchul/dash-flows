@@ -1,9 +1,16 @@
 // BananaNode.js
-import React, { memo } from 'react';
+import React, { memo, useMemo, useEffect, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Handle, Position, NodeResizer } from 'reactflow';
+import CreatableSelect from 'react-select/creatable';
+import { FaPencilAlt } from 'react-icons/fa';
 
+
+/**
+ * ddd
+ */
 const BananaNode = memo(({ data, selected }) => {
+
     const renderDashComponent = (component) => {
         if (!component) return null;
         if (typeof component === 'string') return component;
@@ -92,43 +99,133 @@ const BananaNode = memo(({ data, selected }) => {
         return null;
     };
 
+    console.log("the options now:",
+        data.dependsOnOptions ? data.dependsOnOptions.filter(
+            (option) => option.value != data.node_id)
+            : []);
+
     return (
-        <div className="resizable-node" style={{
+        <div style={{
             width: '100%',
             height: '100%',
             border: '1px solid #ddd',
             borderRadius: '4px',
-            position: 'relative',
-            background: '#fff',
-            overflow: 'hidden'
+            //position: 'relative',
+            background: '#eee',
+            // overflow: 'hidden'
         }}>
             <NodeResizer
                 isVisible={selected}
-                minWidth={100}
-                minHeight={50}
-                handleStyle={{ width: 8, height: 8 }}
-                lineStyle={{ borderWidth: 1 }}
+                minWidth={120}
+                minHeight={80}
+                // handleStyle={{ width: 8, height: 8 }}
+                //lineStyle={{ borderWidth: 1 }}
             />
             <Handle
                 type="target"
                 position={Position.Top}
                 style={{ background: '#555' }}
+                // handleStyle={{ width: 8, height: 8, background: 'blue' }} // backgroundColor (?)
+                //lineStyle={{ borderWidth: 1, borderColor: `blue` }}
+                isConnectable={true}
+                onConnect={(params)=>{
+                    console.log("got onConnect from target:", params);
+                }}
             />
-            <div style={{
-                padding: 10,
-                width: '100%',
-                height: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'column'
-            }}>
-                {data.label && renderDashComponent(data.label)}
+            <div // className="nodrag"
+                    >
+                    <div style={{ display: 'flex', algnItems: 'center', justifyContent: 'space-between' }}>
+                        <i>add pic here</i>
+                        <div style={{ display: 'flex', algnItems: 'center', justifyContent: 'flex-end' }}>
+                            <button onClick={() => {
+                                console.log("node's button props");
+                                console.log("data: ", data);
+
+                                alert("no workie yet. here's the data:", data );
+
+
+                            }}>...</button>
+                            <button onClick={() => {
+                                console.log("node's button delete");
+                                data.onDelete(data.node_id);
+                            }}>X</button>
+                        </div>
+                    </div>
+                    <div>
+                        <b>{data.label && renderDashComponent(data.label)}</b>
+                    </div>
+                    <div>
+                        <input
+                            name="some_input"
+                            tyle="text"
+                            onChange={(newValue,actionMeta)=>
+                                {
+                                    console.log("onchange for some_input");
+                                }
+                            }
+                            defaultValue={"something"}
+                            />
+                    </div>
+                    <div>
+                        <label>Some select</label>
+                        <CreatableSelect
+                            name="some_select"
+                            value="something"
+                            options={[{value:"something",label:"some label"},{value:"something2",label:"some label2"}]}
+                            onChange={
+                                (newValue, actionMeta) =>{
+                                    console.log("got for some_select:", newValue, actionMeta);
+                                }
+                            }
+                            isClearable
+                        />
+                    </div>
+                    <div>
+                        <label>Depends on</label>
+                        <CreatableSelect
+                            name="depends_on"
+                            isMulti
+                            value={
+                                (
+                                    data.dependsOnOptions ? data.dependsOnOptions.filter(
+                                        (option) => data.depends_on.includes(option.value)
+                                    )
+                                        : []
+                                )
+                            }
+                            options={
+                                (
+                                    data.dependsOnOptions ? data.dependsOnOptions.filter(
+                                        (option) => option.value != data.node_id)
+                                        : []
+                                )
+                            }
+                            onChange={
+                                (newValue, actionMeta) =>
+                                    data.onChange(newValue, actionMeta, data.node_id)
+                            }
+                            isClearable
+                        />
+                    </div>
             </div>
+
             <Handle
+                id="a"
                 type="source"
                 position={Position.Bottom}
                 style={{ background: '#555' }}
+                onConnect={(params)=>{
+                    console.log("got onConnect from source a:", params);
+                }}
+            />
+            <Handle
+                id="b"
+                type="source"
+                position={Position.Bottom}
+                style={{ background: '#555' }}
+                onConnect={(params)=>{
+                    console.log("got onConnect from source b:", params);
+                }}
             />
         </div>
     );
@@ -137,14 +234,31 @@ const BananaNode = memo(({ data, selected }) => {
 BananaNode.displayName = 'BananaNode';
 
 BananaNode.propTypes = {
+    /**
+    * ddd
+    */
     data: PropTypes.shape({
-        label: PropTypes.any
+        label: PropTypes.any,
+        depends_on: PropTypes.array, // we also have the dependsOnOptions (?)
+        node_id: PropTypes.string,
+        onChange: PropTypes.func,
+        onDelete: PropTypes.func,
+        dependsOnOptions: PropTypes.any
     }).isRequired,
+
+    /**
+    * ddd
+    */
     selected: PropTypes.bool
 };
 
 BananaNode.defaultProps = {
-    selected: false
+    selected: false,
+    data: {
+        label: "undef",
+        depends_on: [],
+        node_id: "undef"
+    }
 };
 
 export default BananaNode

@@ -6,7 +6,7 @@
 \title{DashFlows component}
 
 \description{
-
+ddd
 }
 
 \usage{
@@ -60,7 +60,7 @@ those elements have the following types:
 
 \item{style}{Named list. Custom CSS styles for the container div}
 
-\item{wholeGraph}{Character. }
+\item{wholeGraph}{Character. wakawaka}
 }
 
 \value{named list of JSON elements corresponding to React.js properties and their values}

@@ -6,9 +6,9 @@ export animatedcirclenode
     animatedcirclenode(;kwargs...)
 
 An AnimatedCircleNode component.
-
+ddd
 Keyword arguments:
-- `data` (required): . data has the following type: lists containing elements 'label'.
+- `data` (required): ddd. data has the following type: lists containing elements 'label'.
 Those elements have the following types:
   - `label` (Bool | Real | String | Dict | Array; optional)
 """

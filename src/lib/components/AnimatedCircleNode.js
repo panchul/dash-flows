@@ -3,6 +3,9 @@ import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { Handle, Position } from 'reactflow';
 
+/**
+ * ddd
+ */
 const AnimatedCircleNode = memo(({ data }) => {
     return (
         <div style={{
@@ -37,6 +40,9 @@ const AnimatedCircleNode = memo(({ data }) => {
 AnimatedCircleNode.displayName = 'AnimatedCircleNode';
 
 AnimatedCircleNode.propTypes = {
+    /**
+    * ddd
+    */
     data: PropTypes.shape({
         label: PropTypes.any
     }).isRequired

@@ -5,11 +5,12 @@ from dash.development.base_component import Component, _explicitize_args
 
 class AnimatedCircleNode(Component):
     """An AnimatedCircleNode component.
-
+ddd
 
 Keyword arguments:
 
-- data (dict; required)
+- data (dict; required):
+    ddd.
 
     `data` is a dict with keys:
 
