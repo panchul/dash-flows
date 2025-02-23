@@ -7,6 +7,7 @@ const version = "0.0.3"
 
 include("jl/animatedcirclenode.jl")
 include("jl/animatednodeedge.jl")
+include("jl/banananode.jl")
 include("jl/dashflows.jl")
 include("jl/devtools.jl")
 include("jl/resizablenode.jl")

@@ -18,6 +18,7 @@ import ResizableNode from './ResizableNode';
 import AnimatedCircleNode from './AnimatedCircleNode';
 import DevTools from './DevTools';
 import AnimatedNodeEdge from './AnimatedNodeEdge';
+import BananaNode from './BananaNode.react';
 
 // Initialize ELK
 const elk = new ELK();
@@ -26,6 +27,7 @@ const elk = new ELK();
 const nodeTypes = {
     resizable: ResizableNode,
     circle: AnimatedCircleNode,
+    banana: BananaNode,
 };
 
 // Edge types definition

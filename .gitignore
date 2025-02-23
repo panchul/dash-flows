@@ -1,3 +1,13 @@
+
+dash_flows/dash_flows.min.js
+dash_flows/dash_flows.min.js.map
+deps/dash_flows.min.js
+deps/dash_flows.min.js.map
+inst/deps/dash_flows.min.js
+inst/deps/dash_flows.min.js.map
+package-lock.json
+
+
 # Created by .ignore support plugin (hsz.mobi)
 ### Webpack
 .build_cache

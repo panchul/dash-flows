@@ -3,19 +3,18 @@ from dash import html, Input, Output, State, clientside_callback, _dash_renderer
 import dash_flows
 import dash_mantine_components as dmc
 
-
 _dash_renderer._set_react_version("18.2.0")
 
-app = dash.Dash(__name__, assets_folder='assets', external_stylesheets=dmc.styles.ALL)
+app = dash.Dash(__name__, assets_folder='assets',
+                 external_stylesheets=dmc.styles.ALL)
 
 initial_nodes = [
-    # First node stays the same
     {
         'id': '1',
         'type': 'resizable',
         'data': {
             'label': html.Div([
-                html.Img(src="https://avatars.githubusercontent.com/u/120129682?v=4",
+                html.Img(src="tbd",
                          style={'width': '100%', 'height': '100%'}),
             ], style={
                 'display': 'flex',
@@ -31,12 +30,11 @@ initial_nodes = [
             'height': 300,
         }
     },
-    # Second node (static)
     {
         'id': '2',
         'type': 'resizable',
         'data': {'label': html.Div([
-            html.Img(src="https://avatars.discourse-cdn.com/v4/letter/h/50afbb/288.png",
+            html.Img(src="tbd",
                      style={'width': '100%', 'height': '100%'}),
         ], style={
             'display': 'flex',
@@ -51,7 +49,6 @@ initial_nodes = [
             'height': 300,
         }
     },
-    # Add an animated node
     {
         'id': 'animated1',
         'type': 'circle',
@@ -62,13 +59,12 @@ initial_nodes = [
             'height': 60,
         }
     },
-    # Third node stays the same
     {
         'id': '3',
         'type': 'resizable',
         'data': {
             'label': html.Div([
-html.Button(id='btn_example', children='button')], style={
+                html.Button(id='btn_example', children='button')], style={
             'display': 'flex',
             'flexDirection': 'column',
             'alignItems': 'center',
@@ -76,6 +72,17 @@ html.Button(id='btn_example', children='button')], style={
             'padding': '10px'
         })
         },
+        'position': {'x': 250, 'y': 250},
+        'style': {
+            'width': 300,
+            'height': 300,
+            'minHeight': 200
+        }
+    },
+    {
+        'id': '4',
+        'type': 'banana',
+        'data': {'label': 'banana' },
         'position': {'x': 250, 'y': 250},
         'style': {
             'width': 300,
@@ -121,6 +128,27 @@ layout_buttons = dmc.Group([
 ], mt="md", mb="md")
 
 app.layout = dmc.MantineProvider([
+    dmc.Text("Here's the component:", size="sm"),
+    dmc.JsonInput(
+        label="Here's the initial input (json):",
+        placeholder="Textarea will autosize to fit the content",
+        validationError="Invalid JSON",
+        formatOnBlur=True,
+        autosize=True,
+        minRows=4,
+        maxRows=8,
+        w = 800,
+        value = '{"something":1, "another":{"something":1, "another":2}}'
+    ),
+
+    dcc.Upload(id='upload-data',
+               children=html.Button('Upload',
+            id='upload-button'),
+            multiple=False),
+    html.Button("download", id='btn-download-txt'),
+    dcc.Download(id="download-txt"),
+    html.Hr(),
+
     layout_buttons,
     dash_flows.DashFlows(
         id='react-flow-example',
@@ -188,5 +216,7 @@ app.clientside_callback(
     prevent_initial_call=True
 )
 
+# TODO: callbacks for upload and download, use State
+
 if __name__ == '__main__':
-    app.run_server(debug=True, port=7777)
+    app.run_server(debug=True, port=8080)
