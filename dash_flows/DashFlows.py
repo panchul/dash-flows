@@ -78,16 +78,18 @@ Keyword arguments:
     Show/hide the minimap navigation component.
 
 - style (dict; optional):
-    Custom CSS styles for the container div."""
+    Custom CSS styles for the container div.
+
+- wholeGraph (string; default "")"""
     _children_props = []
     _base_nodes = ['children']
     _namespace = 'dash_flows'
     _type = 'DashFlows'
     @_explicitize_args
-    def __init__(self, id=Component.UNDEFINED, nodesDraggable=Component.UNDEFINED, nodesConnectable=Component.UNDEFINED, elementsSelectable=Component.UNDEFINED, showMiniMap=Component.UNDEFINED, showControls=Component.UNDEFINED, showBackground=Component.UNDEFINED, nodes=Component.UNDEFINED, edges=Component.UNDEFINED, style=Component.UNDEFINED, className=Component.UNDEFINED, showDevTools=Component.UNDEFINED, layoutOptions=Component.UNDEFINED, **kwargs):
-        self._prop_names = ['id', 'className', 'edges', 'elementsSelectable', 'layoutOptions', 'nodes', 'nodesConnectable', 'nodesDraggable', 'showBackground', 'showControls', 'showDevTools', 'showMiniMap', 'style']
+    def __init__(self, id=Component.UNDEFINED, nodesDraggable=Component.UNDEFINED, nodesConnectable=Component.UNDEFINED, elementsSelectable=Component.UNDEFINED, showMiniMap=Component.UNDEFINED, showControls=Component.UNDEFINED, showBackground=Component.UNDEFINED, wholeGraph=Component.UNDEFINED, nodes=Component.UNDEFINED, edges=Component.UNDEFINED, style=Component.UNDEFINED, className=Component.UNDEFINED, showDevTools=Component.UNDEFINED, layoutOptions=Component.UNDEFINED, **kwargs):
+        self._prop_names = ['id', 'className', 'edges', 'elementsSelectable', 'layoutOptions', 'nodes', 'nodesConnectable', 'nodesDraggable', 'showBackground', 'showControls', 'showDevTools', 'showMiniMap', 'style', 'wholeGraph']
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['id', 'className', 'edges', 'elementsSelectable', 'layoutOptions', 'nodes', 'nodesConnectable', 'nodesDraggable', 'showBackground', 'showControls', 'showDevTools', 'showMiniMap', 'style']
+        self.available_properties = ['id', 'className', 'edges', 'elementsSelectable', 'layoutOptions', 'nodes', 'nodesConnectable', 'nodesDraggable', 'showBackground', 'showControls', 'showDevTools', 'showMiniMap', 'style', 'wholeGraph']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()

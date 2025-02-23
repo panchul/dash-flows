@@ -1,9 +1,9 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 #' @export
-dashFlows <- function(id=NULL, className=NULL, edges=NULL, elementsSelectable=NULL, layoutOptions=NULL, nodes=NULL, nodesConnectable=NULL, nodesDraggable=NULL, showBackground=NULL, showControls=NULL, showDevTools=NULL, showMiniMap=NULL, style=NULL) {
+dashFlows <- function(id=NULL, className=NULL, edges=NULL, elementsSelectable=NULL, layoutOptions=NULL, nodes=NULL, nodesConnectable=NULL, nodesDraggable=NULL, showBackground=NULL, showControls=NULL, showDevTools=NULL, showMiniMap=NULL, style=NULL, wholeGraph=NULL) {
     
-    props <- list(id=id, className=className, edges=edges, elementsSelectable=elementsSelectable, layoutOptions=layoutOptions, nodes=nodes, nodesConnectable=nodesConnectable, nodesDraggable=nodesDraggable, showBackground=showBackground, showControls=showControls, showDevTools=showDevTools, showMiniMap=showMiniMap, style=style)
+    props <- list(id=id, className=className, edges=edges, elementsSelectable=elementsSelectable, layoutOptions=layoutOptions, nodes=nodes, nodesConnectable=nodesConnectable, nodesDraggable=nodesDraggable, showBackground=showBackground, showControls=showControls, showDevTools=showDevTools, showMiniMap=showMiniMap, style=style, wholeGraph=wholeGraph)
     if (length(props) > 0) {
         props <- props[!vapply(props, is.null, logical(1))]
     }
@@ -11,7 +11,7 @@ dashFlows <- function(id=NULL, className=NULL, edges=NULL, elementsSelectable=NU
         props = props,
         type = 'DashFlows',
         namespace = 'dash_flows',
-        propNames = c('id', 'className', 'edges', 'elementsSelectable', 'layoutOptions', 'nodes', 'nodesConnectable', 'nodesDraggable', 'showBackground', 'showControls', 'showDevTools', 'showMiniMap', 'style'),
+        propNames = c('id', 'className', 'edges', 'elementsSelectable', 'layoutOptions', 'nodes', 'nodesConnectable', 'nodesDraggable', 'showBackground', 'showControls', 'showDevTools', 'showMiniMap', 'style', 'wholeGraph'),
         package = 'dashFlows'
         )
 

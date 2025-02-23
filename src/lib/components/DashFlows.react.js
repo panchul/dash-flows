@@ -1,5 +1,5 @@
-// DashFlow.react.js
-import React, { useCallback, useEffect, useMemo } from 'react';
+// DashFlows.react.js
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {
     ReactFlow,
@@ -10,8 +10,11 @@ import {
     useNodesState,
     useEdgesState,
     useViewport,
-} from '@xyflow/react';
-import '@xyflow/react/dist/style.css';
+//} from '@xyflow/react';
+} from 'reactflow';
+
+//import '@xyflow/react/dist/style.css';
+import 'reactflow/dist/style.css';
 import ELK from 'elkjs/lib/elk.bundled.js';
 
 import ResizableNode from './ResizableNode';
@@ -209,7 +212,7 @@ const FlowWithProvider = (props) => {
     );
 };
 
-const DashFlow = (props) => {
+const DashFlows = (props) => {
     return (
         <div id={props.id}>
             <ReactFlowProvider>
@@ -219,13 +222,14 @@ const DashFlow = (props) => {
     );
 };
 
-DashFlow.defaultProps = {
+DashFlows.defaultProps = {
     nodesDraggable: true,
     nodesConnectable: true,
     elementsSelectable: true,
     showMiniMap: true,
     showControls: true,
     showBackground: true,
+    wholeGraph: "",
     nodes: [],
     edges: [],
     style: {},
@@ -234,7 +238,7 @@ DashFlow.defaultProps = {
     layoutOptions: null,
 };
 
-DashFlow.propTypes = {
+DashFlows.propTypes = {
     /**
      * The ID used to identify this component in Dash callbacks.
      */
@@ -269,6 +273,11 @@ DashFlow.propTypes = {
      * Show/hide the background pattern
      */
     showBackground: PropTypes.bool,
+
+    /**
+     * 
+     */
+    wholeGraph: PropTypes.string,
 
     /**
      * Array of nodes to display in the flow
@@ -322,6 +331,6 @@ DashFlow.propTypes = {
     setProps: PropTypes.func
 };
 
-DashFlow.displayName = 'DashFlow';
+DashFlows.displayName = 'DashFlows';
 
-export default DashFlow;
+export default DashFlows;

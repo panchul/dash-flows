@@ -1,7 +1,7 @@
 // ResizableNode.js
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
-import { Handle, Position, NodeResizer } from '@xyflow/react';
+import { Handle, Position, NodeResizer } from 'reactflow';
 
 const ResizableNode = memo(({ data, selected }) => {
     const renderDashComponent = (component) => {

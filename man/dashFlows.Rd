@@ -14,7 +14,7 @@ dashFlows(id=NULL, className=NULL, edges=NULL,
 elementsSelectable=NULL, layoutOptions=NULL, nodes=NULL,
 nodesConnectable=NULL, nodesDraggable=NULL,
 showBackground=NULL, showControls=NULL, showDevTools=NULL,
-showMiniMap=NULL, style=NULL)
+showMiniMap=NULL, style=NULL, wholeGraph=NULL)
 }
 
 \arguments{
@@ -59,6 +59,8 @@ those elements have the following types:
 \item{showMiniMap}{Logical. Show/hide the minimap navigation component}
 
 \item{style}{Named list. Custom CSS styles for the container div}
+
+\item{wholeGraph}{Character. }
 }
 
 \value{named list of JSON elements corresponding to React.js properties and their values}

@@ -1,7 +1,7 @@
 // src/lib/components/AnimatedCircleNode.js
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
-import { Handle, Position } from '@xyflow/react';
+import { Handle, Position } from 'reactflow';
 
 const AnimatedCircleNode = memo(({ data }) => {
     return (

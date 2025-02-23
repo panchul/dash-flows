@@ -1,7 +1,7 @@
 // src/lib/components/DevTools.js
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Panel } from '@xyflow/react';
+import { Panel } from 'reactflow';
 
 const ViewportLogger = ({ viewport }) => (
     <div style={{ padding: '8px', background: '#fff', borderRadius: '4px', margin: '4px' }}>

@@ -1,7 +1,7 @@
 // BananaNode.js
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
-import { Handle, Position, NodeResizer } from '@xyflow/react';
+import { Handle, Position, NodeResizer } from 'reactflow';
 
 const BananaNode = memo(({ data, selected }) => {
     const renderDashComponent = (component) => {

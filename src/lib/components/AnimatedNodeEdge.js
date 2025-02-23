@@ -1,7 +1,7 @@
 // src/lib/components/AnimatedNodeEdge.js
 import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { BaseEdge, getBezierPath, useReactFlow } from '@xyflow/react';
+import { BaseEdge, getBezierPath, useReactFlow } from 'reactflow';
 
 /**
  * AnimatedNodeEdge is a custom edge component that animates a node along its path.

@@ -37,9 +37,10 @@ Those elements have the following types:
 - `showDevTools` (Bool; optional): Show/hide the developer tools panel
 - `showMiniMap` (Bool; optional): Show/hide the minimap navigation component
 - `style` (Dict; optional): Custom CSS styles for the container div
+- `wholeGraph` (String; optional)
 """
 function dashflows(; kwargs...)
-        available_props = Symbol[:id, :className, :edges, :elementsSelectable, :layoutOptions, :nodes, :nodesConnectable, :nodesDraggable, :showBackground, :showControls, :showDevTools, :showMiniMap, :style]
+        available_props = Symbol[:id, :className, :edges, :elementsSelectable, :layoutOptions, :nodes, :nodesConnectable, :nodesDraggable, :showBackground, :showControls, :showDevTools, :showMiniMap, :style, :wholeGraph]
         wild_props = Symbol[]
         return Component("dashflows", "DashFlows", "dash_flows", available_props, wild_props; kwargs...)
 end
