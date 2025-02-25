@@ -1,7 +1,7 @@
 
 name = "DashFlows"
 uuid = "1b08a953-4be3-4667-9a23-f230d3c47d57"
-authors = ["Pddd <abrahamlinkoln@gmail.com>"]
+authors = ["Pddd <theabrahamlinkoln@ggmail.com>"]
 version = "0.0.3"
 
 [deps]

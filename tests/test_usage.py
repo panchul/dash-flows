@@ -1,3 +1,4 @@
+"""
 from dash.testing.application_runners import import_app
 
 
@@ -23,3 +24,5 @@ def test_render_component(dash_duo):
     # Wait for the text to equal, if after the timeout (default 10 seconds)
     # the text is not equal it will fail the test.
     dash_duo.wait_for_text_to_equal('#output', 'You have entered Hello dash')
+
+    """

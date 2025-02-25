@@ -30,14 +30,14 @@ const elk = new ELK();
 
 // Node types definition
 const nodeTypes = {
-    resizable: ResizableNode,
-    circle: AnimatedCircleNode,
+    //resizable: ResizableNode,
+    //circle: AnimatedCircleNode,
     banana: BananaNode,
 };
 
 // Edge types definition
 const edgeTypes = {
-    animated: AnimatedNodeEdge,
+    //animated: AnimatedNodeEdge,
 };
 
 // Process Dash components
@@ -132,7 +132,7 @@ const FlowWithProvider = (props) => {
 
     const parseGraphAndGetNodes = () => {
         try {
-            return getGraphJson().nodes.map((node)=>
+            return getGraphJson().nodes.filter((n)=>n.type=="banana").map((node)=>
             ({
                 id: node.id,
                 type: node.type,

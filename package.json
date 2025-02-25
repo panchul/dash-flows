@@ -2,7 +2,7 @@
   "name": "dash_flows",
   "version": "0.0.3",
   "description": "React Flow for the Plotly Dash framework.",
-"repository": {
+  "repository": {
     "type": "git",
     "url": "git://gitdash-flows.git"
   },
@@ -19,17 +19,20 @@
     "build:backends": "dash-generate-components ./src/lib/components dash_flows -p package-info.json --r-prefix '' --jl-prefix '' --ignore \\.test\\.",
     "build:backends-activated": "(. venv/bin/activate || venv\\scripts\\activate && npm run build:backends)",
     "build": "npm run build:js && npm run build:backends",
-    "build:activated": "npm run build:js && npm run build:backends-activated"
+    "build:activated": "npm run build:js && npm run build:backends-activated",
+    "test": "pytest"
   },
-  "author": "Pddd <abrahamlinkoln@gmail.com>",
+  "author": "Pddd <theabrahamlinkoln@ggmail.com>",
   "license": "",
   "dependencies": {
-    "bootstrap":"5.3.3",
-    "reactflow": "^11.11.4",
-    "react-icons": "^5.5.0",
+    "bootstrap": "5.3.3",
+    "chromedriver": "^133.0.2",
     "elk": "^1.0.0",
     "elkjs": "^0.8.2",
     "ramda": "^0.26.1",
+    "react-icons": "^5.5.0",
+    "reactflow": "^11.11.4",
+    "webdriver-manager": "^12.1.9",
     "zustand": "^4.4.7"
   },
   "devDependencies": {

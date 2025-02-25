@@ -167,6 +167,18 @@ const BananaNode = memo(({ data, selected }) => {
                             />
                     </div>
                     <div>
+                        <input
+                            name="metric"
+                            tyle="text"
+                            onChange={(newValue,actionMeta)=>{
+                                    console.log("onChange of the metric field for data.node_id ", data.node_id);
+                                    data.onChange(newValue, actionMeta, data.node_id);
+                                }
+                            }
+                            defaultValue={"11.0 m"}
+                            />
+                    </div>
+                    <div>
                         <label>Some select</label>
                         <CreatableSelect
                             name="some_select"

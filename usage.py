@@ -6,11 +6,13 @@ from dash import callback, html, Input, Output, State, clientside_callback, _das
 import dash_mantine_components as dmc
 
 import dash_flows
-
+import pandas as pd
+import plotly.express as px
 
 # temporary patch, some dmc things won't work otherwise
 _dash_renderer._set_react_version("18.2.0")
 
+"""
 whole_graph = {
     "nodes": [
     {
@@ -73,6 +75,7 @@ whole_graph = {
         'type': 'banana',
         'data': {
             'label': 'banana4',
+            'metric':  "20.0 m",
             'depends_on': []
              },
         'position': {'x': 250, 'y': 250},
@@ -87,6 +90,7 @@ whole_graph = {
         'type': 'banana',
         'data': {
             'label': 'banana5',
+            'metric': "10.0 m",
             'depends_on': ['4']
              },
         'position': {'x': 270, 'y': 270},
@@ -122,6 +126,43 @@ whole_graph = {
         }
     }
 ]
+}
+"""
+
+whole_graph = {
+    "nodes": [
+    {
+        'id': '4',
+        'type': 'banana',
+        'data': {
+            'label': 'banana4',
+            'metric':  "20.0 m",
+            'depends_on': []
+             },
+        'position': {'x': 250, 'y': 250},
+        'style': {
+            'width': 300,
+            'height': 300,
+            'minHeight': 200
+        }
+    },
+    {
+        'id': '5',
+        'type': 'banana',
+        'data': {
+            'label': 'banana5',
+            'metric': "10.0 m",
+            'depends_on': ['4']
+             },
+        'position': {'x': 270, 'y': 270},
+        'style': {
+            'width': 300,
+            'height': 300,
+            'minHeight': 200
+        }
+    }
+],
+"edges" : []
 }
 
 get_nodes_from_graph = lambda whole_graph : [
@@ -191,7 +232,9 @@ app.layout = dmc.MantineProvider(
             layoutOptions=None  # Add this prop
         ),
         # Hidden div for storing layout options
-        html.Div(id="layout-options", style={"display": "none"})
+        html.Div(id="layout-options", style={"display": "none"}),
+        dcc.Dropdown(["metric"], "metric",id="dropdown-selection"),
+        dcc.Graph(id="graph-content")
     ]
 )
 
@@ -290,6 +333,38 @@ def update_output(content, filename, date):
         return parse_contents(content, filename)
     else:
         return "no file uploaded"
+
+
+@callback(
+    Output("graph-content", "figure"),
+    Input("dropdown-selection", "value"),
+    Input("react-flow-example", "wholeGraph"),
+)
+def update_graph_char(value, wholeGraph):
+
+    print(f"wholeGraph: {wholeGraph}")
+    wholeGraph_dict = json.loads(wholeGraph)
+
+    print(f"wholeGraph_dict: {wholeGraph_dict}")
+
+    nodeids = []
+    values=[]
+
+    for node in wholeGraph_dict["nodes"]:
+        if value in node["data"]:
+            nodeids.append(node["id"])
+            values.append(float(node["data"][value].split()[0]))
+
+    print(f"nodeids: {nodeids}")
+    print(f"values: {values}")
+
+    node_df = pd.DataFrame({"node id": nodeids, value: values})
+
+    fig = px.bar(
+        node_df, x="node id", y=value, title=f"node Id vs {value}", text_auto=True
+    )
+
+    return fig
 
 if __name__ == '__main__':
     app.run_server(debug=True, port=8080)
