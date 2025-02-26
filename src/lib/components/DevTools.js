@@ -67,7 +67,7 @@ const DevTools = ({ viewport, nodes, onAddNode }) => {
                 <button id="btn_add"
                     style={localButtonStyle}
                     onClick={(evt)=>{
-                        console.log("adding a node...");
+                        console.log("adding a node...", evt);
                         onAddNode({
                             counter: nodes.length
                         });

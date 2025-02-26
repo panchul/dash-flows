@@ -10,12 +10,12 @@ import {
     useNodesState,
     useEdgesState,
     useViewport,
-//} from '@xyflow/react';
+    //} from '@xyflow/react';
 } from 'reactflow';
 
 //import '@xyflow/react/dist/style.css';
 import 'reactflow/dist/style.css';
-import {FaPencilAlt} from 'react-icons/fa';
+import { FaPencilAlt } from 'react-icons/fa';
 import CreatableSelect from 'react-select/creatable';
 import ELK from 'elkjs/lib/elk.bundled.js';
 
@@ -57,7 +57,9 @@ const processDashComponents = (nodes) => {
             const layout = component.props._dashprivate_layout;
             const processedChildren = Array.isArray(layout.props.children)
                 ? layout.props.children.map(processComponent)
-                : layout.props.children ? processComponent(layout.props.children) : null;
+                : layout.props.children
+                    ? processComponent(layout.props.children)
+                    : null;
 
             return {
                 props: {
@@ -77,7 +79,8 @@ const processDashComponents = (nodes) => {
             console.log('regular react node', component);
             const processedChildren = Array.isArray(component.props.children)
                 ? component.props.children.map(processComponent)
-                : component.props.children ? processComponent(component.props.children) : null;
+                : component.props.children
+                    ? processComponent(component.props.children) : null;
 
             return {
                 type: component.type,
@@ -116,11 +119,11 @@ const FlowWithProvider = (props) => {
         try {
             const res = JSON.parse(props.wholeGraph);
 
-            if(res.nodes == undefined) {
+            if (res.nodes == undefined) {
                 console.log("unexpected res.nodes == undefined");
             }
 
-            if(res.edges == undefined) {
+            if (res.edges == undefined) {
                 console.log("unexpected res.edges == undefined");
             }
             return res;
@@ -132,18 +135,21 @@ const FlowWithProvider = (props) => {
 
     const parseGraphAndGetNodes = () => {
         try {
-            return getGraphJson().nodes.filter((n)=>n.type=="banana").map((node)=>
-            ({
-                id: node.id,
-                type: node.type,
-                position: node.position,
-                data: {
-                    label: node.data.label,
-                    depends_on: node.data.depends_on || [],
-                    node_id: node.id // otherwise it is not clear how the node class knows what it is
-                },
-            })
-            );
+            return getGraphJson().nodes.filter(
+                (n) => n.type && n.type == "banana").map(
+                    (node) =>
+                    ({
+                        id: node.id,
+                        type: node.type,
+                        position: node.position,
+                        data: {
+                            label: node.data.label,
+                            metric: node.data.metric,
+                            depends_on: node.data.depends_on || [],
+                            node_id: node.id // otherwise it is not clear how the node class knows what it is
+                        },
+                    })
+                );
         } catch (error) {
             console.log('failed to parse graph and get the nodes:', error);
             return [];
@@ -152,7 +158,7 @@ const FlowWithProvider = (props) => {
 
     const parseGraphAndGetEdges = () => {
         try {
-            return getGraphJson().edges.map((edge)=>
+            return getGraphJson().edges.map((edge) =>
             ({
                 id: edge.id,
                 source: edge.source,
@@ -179,7 +185,7 @@ const FlowWithProvider = (props) => {
             const graph = {
                 id: 'root',
                 layoutOptions: layoutOptions,
-                children: nodes.map(node => {
+                children: props.nodes.map(node => {
                     // Special handling for circle nodes and animated nodes
                     const isCircleNode = node.type === 'circle' || edges.some(edge =>
                         edge.type === 'animated' && edge.data?.animatedNode === node.id
@@ -225,8 +231,8 @@ const FlowWithProvider = (props) => {
 
             setNodes(layoutedNodes);
             props.setProps({
-                    nodes: layoutedNodes 
-                });
+                nodes: layoutedNodes
+            });
         } catch (error) {
             console.error('Layout error:', error);
         }
@@ -244,7 +250,7 @@ const FlowWithProvider = (props) => {
             //console.log('new nodes:', nodes);
             props.setProps({
                 nodes,
-                wholeGraph: JSON.stringify({nodes,edges})
+                wholeGraph: JSON.stringify({ nodes, edges })
             });
         }
     }, [nodes]);
@@ -254,8 +260,8 @@ const FlowWithProvider = (props) => {
             //console.log('new edges:', edges);
             props.setProps({
                 edges,
-                wholeGraph: JSON.stringify({nodes,edges})
-                });
+                wholeGraph: JSON.stringify({ nodes, edges })
+            });
         }
     }, [edges]);
 
@@ -273,13 +279,13 @@ const FlowWithProvider = (props) => {
         }
 
         setNodes((nds) => {
-            nds.map((node)=>{
-                if(node.id == node_id) {
+            nds.map((node) => {
+                if (node.id == node_id) {
                     return {
                         ...node,
                         data: {
                             ...node.data,
-                            [field]:value
+                            [field]: value
                         }
                     };
                 } else {
@@ -290,16 +296,16 @@ const FlowWithProvider = (props) => {
     };
 
     const onDelete = (node_id) => {
-        setNodes((nds)=>nds.filter((node)=> node.id != node_id));
-        setEdges((eds)=>eds.filter((edge)=> edge.source != node_id && edge.target != node_id));
-        setNodes((nds) => 
+        setNodes((nds) => nds.filter((node) => node.id != node_id));
+        setEdges((eds) => eds.filter((edge) => edge.source != node_id && edge.target != node_id));
+        setNodes((nds) =>
             nds.map((node) => {
                 return {
                     ...node,
-                    depends_on: (node.depends_on || []).filter((dep)=> dep!= node_id)
+                    depends_on: (node.depends_on || []).filter((dep) => dep != node_id)
                 };
             }
-        ));
+            ));
     };
 
     const updatedDependsOnOptions = (nds) => nds.map((node) => {
@@ -309,31 +315,31 @@ const FlowWithProvider = (props) => {
         };
     });
 
-    useEffect(()=>{
+    useEffect(() => {
         setNodes((nds) =>
-            nds.map((node)=> {
-            return {
-                ...node,
-                data: {
-                    ...node.data,
-                    onChange: onChange,
-                    onDelete: onDelete,
-                    dependsOnOptions: updatedDependsOnOptions(nds)
-                }
-            };
-        }));
+            nds.map((node) => {
+                return {
+                    ...node,
+                    data: {
+                        ...node.data,
+                        onChange: onChange,
+                        onDelete: onDelete,
+                        dependsOnOptions: updatedDependsOnOptions(nds)
+                    }
+                };
+            }));
     }, [setNodes]); // nodes too?
 
     const onConnect = useCallback(
         (params) => {
             const newEdge = {
-            ...params,
-            id: `e${params.source}-${params.target}` 
+                ...params,
+                id: `e${params.source}-${params.target}`
             };
             setEdges((eds) => [...eds, newEdge]);
-            setNodes((nds)=>
+            setNodes((nds) =>
                 nds.map((node) => {
-                    if(node.id === params.target) {
+                    if (node.id === params.target) {
                         return {
                             ...node,
                             data: {
@@ -351,9 +357,9 @@ const FlowWithProvider = (props) => {
             props.setProps({
                 nodes,
                 edges: [...edges, newEdge],
-                wholeGraph: JSON.stringify({nodes,edges}),
+                wholeGraph: JSON.stringify({ nodes, edges }),
             });
-    }, [edges, setEdges]);
+        }, [setEdges, setNodes]); // (?) nodes and edges too? We json.stringify them.
 
 
     const generateNewNode = (params) => {
@@ -362,15 +368,16 @@ const FlowWithProvider = (props) => {
             id: newid,
             type: 'banana',
             position: {
-                x: 25*params.counter,
-                y: 25*params.counter
-                },
+                x: 25 * params.counter,
+                y: 25 * params.counter
+            },
             data: {
-                label: 'something',
+                label: `something ${newid}`,
                 depends_on: [],
+                metric: `${25 * params.counter} m`,
                 node_id: newid,
-                onChange:onChange,
-                onDelete:onDelete,
+                onChange: onChange,
+                onDelete: onDelete,
                 dependsOnOptions: updatedDependsOnOptions(nodes)
             }
         };
@@ -378,16 +385,19 @@ const FlowWithProvider = (props) => {
 
     const onAddNode = useCallback(
         (params) => {
+            console.log("adding a node: ", params);
             const newNode = generateNewNode(params);
-            setNodes((nds)=>[...nds,newNode]);
+            setNodes((nds) => [...nds, newNode]);
 
             props.setProps({
                 nodes: [...nodes, newNode],
                 edges: edges,
-                wholeGraph: JSON.stringify({
-                    nodes:[...nodes, newNode],
-                    edges: edges
-                })
+                wholeGraph: JSON.stringify(
+                    {
+                        nodes: [...nodes, newNode],
+                        edges: edges
+                    }
+            )
             });
         },
         [setNodes]
@@ -396,27 +406,27 @@ const FlowWithProvider = (props) => {
     const onRemoveNode = useCallback(
         (params) => {
             const nodeId = params.node.id;
-            setNodes((nds)=>nds.filter((node)=>node.id !== nodeId));
-            setEdges((eds)=>eds.filter((edge)=>edge.source !== nodeId && edge.target !== nodeId));
+            setNodes((nds) => nds.filter((node) => node.id !== nodeId));
+            setEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
 
-            setNodes((nds)=>
-                nds.map((node)=>{
-                    if(node.id === nodeId) {
+            setNodes((nds) =>
+                nds.map((node) => {
+                    if (node.id === nodeId) {
                         return {
                             ...node,
                             data: {
                                 ...node.data,
-                                depends_on: depends_on.filter((dep)=> dep !== nodeId)
+                                depends_on: depends_on.filter((dep) => dep !== nodeId)
                             }
                         };
                     }
                     return node;
-            }));
+                }));
 
             props.setProps({
-                nodes: nodes.filter((node)=>node.id !== nodeId),
-                edges: edges.filter((edge)=>edge.source !== nodeId && edge.target !== nodeId),
-                wholeGraph: JSON.stringify({nodes,edges})
+                nodes: nodes.filter((node) => node.id !== nodeId),
+                edges: edges.filter((edge) => edge.source !== nodeId && edge.target !== nodeId),
+                wholeGraph: JSON.stringify({ nodes, edges })
             });
         },
         [setNodes, setEdges]
@@ -425,26 +435,27 @@ const FlowWithProvider = (props) => {
     const onRemoveEdge = useCallback(
         (params) => {
             const edgeId = params.edge.id;
-            setEdges((eds)=>eds.filter((edge)=>edge.id !== edgeId));
+            setEdges((eds) => eds.filter((edge) => edge.id !== edgeId));
 
-            setNodes((nds)=>
-                nds.map((node)=>{
-                    if(node.id === params.edge.target) {
+            setNodes((nds) =>
+                nds.map((node) => {
+                    if (node.id === params.edge.target) {
                         return {
                             ...node,
                             data: {
                                 ...node.data,
-                                depends_on: depends_on.filter((dep)=> dep !== params.edge.source)
+                                depends_on: depends_on.filter(
+                                    (dep) => dep !== params.edge.source)
                             }
                         };
                     }
                     return node;
-            }));
+                }));
 
             props.setProps({
-                nodes: nodes.filter((node)=>node.id !== nodeId),
-                edges: edges.filter((edge)=>edge.source !== nodeId && edge.target !== nodeId),
-                wholeGraph: JSON.stringify({nodes,edges})
+                nodes: nodes,
+                edges: edges.filter((edge) => edge.id !== edgeId),
+                wholeGraph: JSON.stringify({ nodes, edges })
             });
         },
         [setNodes, setEdges]
@@ -474,7 +485,7 @@ const FlowWithProvider = (props) => {
                     viewport={useViewport()}
                     nodes={processedNodes}
                     onAddNode={onAddNode}
-                     />}
+                />}
             </ReactFlow>
         </div>
     );

@@ -165,23 +165,23 @@ whole_graph = {
 "edges" : []
 }
 
-get_nodes_from_graph = lambda whole_graph : [
-    {
-        "id": node["id"],
-        #"type" : "BnanaNode" if node["type"] == "whatever_I_use_there" else node["type"],
-        "type" : node["type"],
-        "position": node["position"],
-        "data": {
-            "label": node["data"].get("label","something")
-        }        
-    } for node in whole_graph["nodes"]]
-
-get_edges_from_graph = lambda whole_graph : [
-    {
-        "id": edge["id"],
-        "source" : edge["source"],
-        "target" : edge["target"],
-    } for edge in whole_graph["edges"]]
+#get_nodes_from_graph = lambda whole_graph : [
+#    {
+#        "id": node["id"],
+#        #"type" : "BnanaNode" if node["type"] == "whatever_I_use_there" else node["type"],
+#        "type" : node["type"],
+#        "position": node["position"],
+#        "data": {
+#            "label": node["data"].get("label","something")
+#        }        
+#    } for node in whole_graph["nodes"]]
+#
+#get_edges_from_graph = lambda whole_graph : [
+#    {
+#        "id": edge["id"],
+#        "source" : edge["source"],
+#        "target" : edge["target"],
+#    } for edge in whole_graph["edges"]]
 
 app = dash.Dash(__name__, assets_folder='assets',
                  external_stylesheets=dmc.styles.ALL)
@@ -189,7 +189,6 @@ app = dash.Dash(__name__, assets_folder='assets',
 app.layout = dmc.MantineProvider(
     id="whole_thing",
     children=[
-        dmc.Text("Here's the component:", size="sm"),
         dmc.JsonInput(
             id="wholegraph-json-input",
             label="Here's the initial input (json):",
@@ -197,8 +196,8 @@ app.layout = dmc.MantineProvider(
             validationError="Invalid JSON",
             # formatOnBlur=True,
             autosize=True,
-            minRows=4,
-            maxRows=8,
+            minRows=3,
+            maxRows=4,
             w = 800,
             value = json.dumps(whole_graph)
         ),
@@ -208,12 +207,10 @@ app.layout = dmc.MantineProvider(
                 id="upload-button"),
             multiple=False),
 
-        html.Button("download",
+        html.Button("Download",
                 id="btn-download-txt"),
 
         dcc.Download(id="download-text"),
-
-        html.Hr(),
 
         dmc.Group([
             dmc.Button("Vertical Layout", id="btn-vertical", variant="outline"),
@@ -225,16 +222,19 @@ app.layout = dmc.MantineProvider(
         dash_flows.DashFlows(
             id="react-flow-example",
             wholeGraph=json.dumps(whole_graph),
-            nodes=get_nodes_from_graph(whole_graph),
-            edges=get_edges_from_graph(whole_graph),
+            #nodes=get_nodes_from_graph(whole_graph),
+            #edges=get_edges_from_graph(whole_graph),
             showDevTools=True,
-            style={"height": "600px"},
-            layoutOptions=None  # Add this prop
+            style={"height": "400px"},
+            #layoutOptions=None  # Add this prop
         ),
         # Hidden div for storing layout options
         html.Div(id="layout-options", style={"display": "none"}),
-        dcc.Dropdown(["metric"], "metric",id="dropdown-selection"),
-        dcc.Graph(id="graph-content")
+        dcc.Dropdown(["metric"],
+                     "metric",
+                     id="dropdown-selection"),
+        dcc.Graph(id="graph-content",
+                  style={"height": "400px"},)
     ]
 )
 
@@ -365,6 +365,14 @@ def update_graph_char(value, wholeGraph):
     )
 
     return fig
+
+@callback(Output("wholegraph-json-input", "value", allow_duplicate=True),
+        Input("react-flow-example", "wholeGraph"),
+        prevent_initial_call=True, # maybe false?
+)
+def updateJsonInput(value):
+    return value
+
 
 if __name__ == '__main__':
     app.run_server(debug=True, port=8080)
